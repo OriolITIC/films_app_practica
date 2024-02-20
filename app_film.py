@@ -80,12 +80,12 @@ def procesa_opcio(context):
 
 def database_read(id:int):
     logging.basicConfig(filename='pelicules.log', encoding='utf-8', level=logging.DEBUG)
-    la_meva_configuracio = #falta codi
-    persistencies = #falta codi
+    la_meva_configuracio = get_configuracio(RUTA_FITXER_CONFIGURACIO)
+    persistencies = get_persistencies()
     films = Llistapelis(
-        persistencia_pelicula=
+        persistencia_pelicula=persistencies
     )
-    films. #falta codi
+    films.llegeix_de_disc()
     return films
 
 def bucle_principal(context):
@@ -103,8 +103,10 @@ def bucle_principal(context):
             context["llistapelis"] = films
 
         elif context["opcio"] == '2':
-            pass
-            #falta codi
+            if context["llistapelis"]:
+                context["llistapelis"].mostra_seguents()  
+                print("No hi ha cap lista de películas carregada.")
+
         procesa_opcio(context)
 
         #falta codi
