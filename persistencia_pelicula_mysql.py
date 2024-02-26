@@ -48,18 +48,15 @@ class Persistencia_pelicula_mysql(IPersistencia_pelicula):
     
     def totes_pag(self, id=None) -> List[Pelicula]:
         cursor = self._conn.cursor(buffered=True)
-        if id is None:
-            query = "SELECT id, titulo, anyo, puntuacion, votos FROM PELICULA;"
-            cursor.execute(query)
-        else:
-            query = "SELECT id, titulo, anyo, puntuacion, votos FROM PELICULA WHERE id = %s;"
-            cursor.execute(query, (id,))
+        query = "SELECT id, titulo, anyo, puntuacion, votos FROM PELICULA WHERE id > %s LIMIT 10;"
+        cursor.execute(query, (id,))
         registros = cursor.fetchall()
         cursor.reset()
         resultado = []
         for registro in registros:
             pelicula = Pelicula(registro[1], registro[2], registro[3], registro[4], self, registro[0])
             resultado.append(pelicula)
+        print(resultado)
         return resultado
     
     def desa(self, pelicula: Pelicula) -> Pelicula:

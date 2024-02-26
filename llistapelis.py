@@ -4,6 +4,7 @@ import json
 from typing import List
 from ipersistencia_pelicula import IPersistencia_pelicula
 from pelicula import Pelicula
+from persistencia_pelicula_mysql import Persistencia_pelicula_mysql
 
 class Llistapelis():
     def __init__ (self, persistencia_pelicula: IPersistencia_pelicula) -> None:
@@ -36,8 +37,17 @@ class Llistapelis():
         return json.dumps(self_dict)
 
     def llegeix_de_disc(self, id: int):
-        self._pelicules = []  
-        self._ult_id = 0  
+ 
+        peliculas = self._persistencia_pelicula.totes_pag(id)
+
+        for pelicula in peliculas:
+            print(pelicula)
+
+        if peliculas:
+            self._pelicules.extend(peliculas)
+            self._ult_id = peliculas[-1].id 
+
+    
         
        
 

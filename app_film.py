@@ -17,6 +17,7 @@ def get_configuracio(ruta_fitxer_configuracio) -> dict:
 
 def get_persistencies(conf: dict) -> dict:
     credencials = {}
+
     if conf["base de dades"]["motor"].lower().strip() == "mysql":
         credencials['host'] = conf["base de dades"]["host"]
         credencials['user'] = conf["base de dades"]["user"]
@@ -47,19 +48,13 @@ def landing_text():
     input("Prem la tecla 'Enter' per a continuar")
     os.system('clear')
 
-def mostra_lent(missatge, v=0.05):
-    for c in missatge:
-        print(c, end='')
-        sys.stdout.flush()
-        time.sleep(v)
-    print()
-
 def mostra_llista(llistapelicula):
     os.system('clear')
     mostra_lent(json.dumps(json.loads(llistapelicula.toJSON()), indent=4), v=0.01)
 
 def mostra_seguents(llistapelicula):
     os.system('clear')
+    mostra_lent(json.dumps(json.loads(llistapelicula.toJSON()), indent=4), v=0.01)
 
 
 def mostra_menu():
@@ -74,19 +69,25 @@ def mostra_menu_next10():
 
 def procesa_opcio(context):
     return {
-        "0": lambda ctx : mostra_lent("Fins la propera"),
-        "1": lambda ctx : mostra_llista(ctx['llistapelis'])
-    }.get(context["opcio"], lambda ctx : mostra_lent("opcio incorrecta!!!"))(context)
+        "0": lambda ctx: mostra_lent("Fins la propera"),
+        "1": lambda ctx: (mostra_llista(ctx['llistapelis']), mostra_menu_next10()),
+        "2": lambda ctx: (context["llistapelis"].mostra_seguents() if context["llistapelis"] else print("No hi ha cap lista de películas carregada."), mostra_menu_next10())
+    }.get(context["opcio"], lambda ctx: mostra_lent("opció incorrecta!!!"))(context)
+
 
 def database_read(id:int):
     logging.basicConfig(filename='pelicules.log', encoding='utf-8', level=logging.DEBUG)
     la_meva_configuracio = get_configuracio(RUTA_FITXER_CONFIGURACIO)
-    persistencies = get_persistencies()
+    print(la_meva_configuracio)
+    persistencies = get_persistencies(la_meva_configuracio)
+    
     films = Llistapelis(
-        persistencia_pelicula=persistencies
+        persistencies['pelicula']  
     )
-    films.llegeix_de_disc()
+    print("hola")
+    films.llegeix_de_disc(id)  
     return films
+
 
 def bucle_principal(context):
     opcio = None
@@ -101,15 +102,14 @@ def bucle_principal(context):
             id = None
             films = database_read(id)
             context["llistapelis"] = films
-
         elif context["opcio"] == '2':
             if context["llistapelis"]:
                 context["llistapelis"].mostra_seguents()  
                 print("No hi ha cap lista de películas carregada.")
-
+        
         procesa_opcio(context)
+        
 
-        #falta codi
 
 
 def main():
