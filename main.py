@@ -25,6 +25,7 @@ def main():
 
     nueva_pelicula = Pelicula("Nova peli3",2001,8.9,99,persistencia,1704)
     print(persistencia.canvia(nueva_pelicula))
+    persistencia.totes_pag(0)
 
     
 

@@ -6,8 +6,7 @@ from llistapelis import Llistapelis
 import logging
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
-RUTA_FITXER_CONFIGURACIO = os.path.join(THIS_PATH, 'configuracio.yml') 
-print(RUTA_FITXER_CONFIGURACIO)
+RUTA_FITXER_CONFIGURACIO = os.path.join(THIS_PATH, 'configuracio.yml')
 
 def get_configuracio(ruta_fitxer_configuracio) -> dict:
     config = {}
@@ -38,7 +37,6 @@ def mostra_lent(missatge, v=0.05):
         time.sleep(v)
     print()
 
-
 def landing_text():
     os.system('clear')
     print("Benvingut a la app de pel·lícules")
@@ -56,61 +54,53 @@ def mostra_seguents(llistapelicula):
     os.system('clear')
     mostra_lent(json.dumps(json.loads(llistapelicula.toJSON()), indent=4), v=0.01)
 
-
 def mostra_menu():
     print("0.- Surt de l'aplicació.")
     print("1.- Mostra les primeres 10 pel·lícules")
-
 
 def mostra_menu_next10():
     print("0.- Surt de l'aplicació.")
     print("2.- Mostra les següents 10 pel·lícules")
 
-
 def procesa_opcio(context):
     return {
         "0": lambda ctx: mostra_lent("Fins la propera"),
         "1": lambda ctx: (mostra_llista(ctx['llistapelis']), mostra_menu_next10()),
-        "2": lambda ctx: (context["llistapelis"].mostra_seguents() if context["llistapelis"] else print("No hi ha cap lista de películas carregada."), mostra_menu_next10())
+        "2": lambda ctx: (mostra_seguents(ctx['llistapelis']) if context["llistapelis"] else print("No hi ha cap lista de películas carregada."), mostra_menu_next10())
     }.get(context["opcio"], lambda ctx: mostra_lent("opció incorrecta!!!"))(context)
-
 
 def database_read(id:int):
     logging.basicConfig(filename='pelicules.log', encoding='utf-8', level=logging.DEBUG)
     la_meva_configuracio = get_configuracio(RUTA_FITXER_CONFIGURACIO)
-    print(la_meva_configuracio)
     persistencies = get_persistencies(la_meva_configuracio)
-    
-    films = Llistapelis(
-        persistencies['pelicula']  
-    )
-    print("hola")
+    films = Llistapelis(persistencies['pelicula'])
     films.llegeix_de_disc(id)  
+   
     return films
-
 
 def bucle_principal(context):
     opcio = None
-    
     mostra_menu()
-
     while opcio != '0':
+        
         opcio = input("Selecciona una opció: ")
         context["opcio"] = opcio
         
-        if context["opcio"] == '1':
-            id = None
-            films = database_read(id)
-            context["llistapelis"] = films
-        elif context["opcio"] == '2':
+        if opcio == '1':
+            id = 0
+            context["llistapelis"] = database_read(id)
+      
+        elif opcio == '2':
             if context["llistapelis"]:
-                context["llistapelis"].mostra_seguents()  
+                id += 10  
+                context["llistapelis"] = database_read(id)
+                
+            else:
                 print("No hi ha cap lista de películas carregada.")
-        
+        elif opcio != '0':
+            print("Opció incorrecta!!!")
+
         procesa_opcio(context)
-        
-
-
 
 def main():
     context = {
@@ -118,7 +108,6 @@ def main():
     }
     landing_text()
     bucle_principal(context)
-
 
 if __name__ == "__main__":
     main()

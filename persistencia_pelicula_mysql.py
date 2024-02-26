@@ -53,10 +53,11 @@ class Persistencia_pelicula_mysql(IPersistencia_pelicula):
         registros = cursor.fetchall()
         cursor.reset()
         resultado = []
+        
         for registro in registros:
             pelicula = Pelicula(registro[1], registro[2], registro[3], registro[4], self, registro[0])
             resultado.append(pelicula)
-        print(resultado)
+        
         return resultado
     
     def desa(self, pelicula: Pelicula) -> Pelicula:

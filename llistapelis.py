@@ -38,14 +38,16 @@ class Llistapelis():
 
     def llegeix_de_disc(self, id: int):
  
-        peliculas = self._persistencia_pelicula.totes_pag(id)
-
-        for pelicula in peliculas:
-            print(pelicula)
-
+        peliculas = self._persistencia_pelicula.totes_pag(id)   
+        
         if peliculas:
             self._pelicules.extend(peliculas)
             self._ult_id = peliculas[-1].id 
+        return peliculas
+    
+
+
+    
 
     
         
