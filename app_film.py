@@ -5,11 +5,11 @@ from persistencia_pelicula_mysql import Persistencia_pelicula_mysql
 from llistapelis import Llistapelis
 import logging
 
-from persistencia_pelicula_postgresql import Persistencia_pelicula_postgresql
+from persistencia_pelicula_pgSQL import Persistencia_pelicula_postgresql
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
-RUTA_FITXER_CONFIGURACIO_MYSQL = os.path.join(THIS_PATH, 'configuracio.yml')
-RUTA_FITXER_CONFIGURACIO_POSTGRESQL = os.path.join(THIS_PATH, 'configuraciopostgresql.yml')
+RUTA_FITXER_CONFIGURACIO_MYSQL = os.path.join(THIS_PATH, 'configuraciomySQL.yml')
+RUTA_FITXER_CONFIGURACIO_POSTGRESQL = os.path.join(THIS_PATH, 'configuraciopgSQL.yml')
 
 # Funció per obtenir la configuració des d'un fitxer YAML
 def get_configuracio(ruta_fitxer_configuracio) -> dict:
