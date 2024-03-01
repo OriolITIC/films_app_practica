@@ -2,6 +2,12 @@ from abc import ABC, abstractclassmethod
 from pelicula import Pelicula
 from typing import List
 
+# Aquest interfície proporciona un contracte que defineix els mètodes 
+# que les classes de persistència de pel·lícules han d'implementar. 
+#
+# Serveix com a guia per a implementacions concretes on s'interactua 
+# amb diferents bases de dades
+
 class IPersistencia_pelicula(ABC):
     @abstractclassmethod
     def totes(self) -> List[Pelicula]:
